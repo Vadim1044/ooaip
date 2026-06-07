@@ -1,6 +1,4 @@
-﻿using SpaceBattle.Lib;
-
-namespace SpaceBattle.Lib;
+﻿namespace SpaceBattle.Lib;
 
 public class RegisterIoCDependencyGameRegistry : ICommand
 {
@@ -18,19 +16,11 @@ public class RegisterIoCDependencyGameRegistry : ICommand
 
         Ioc.Resolve<ICommand>("IoC.Register", "Game.Registry.Add",
             (Func<object[], object>)(args =>
-            {
-                var id = (Guid)args[0];
-                var obj = (IDictionary<string, object>)args[1];
-                return new AddObjectToRegistryCommand(id, obj);
-            })
+                new AddObjectToRegistryCommand((Guid)args[0], (IDictionary<string, object>)args[1]))
         ).Execute();
 
         Ioc.Resolve<ICommand>("IoC.Register", "Game.Registry.Delete",
-            (Func<object[], object>)(args =>
-            {
-                var id = (Guid)args[0];
-                return new DeleteObjectFromRegistryCommand(id);
-            })
+            (Func<object[], object>)(args => new DeleteObjectFromRegistryCommand((Guid)args[0]))
         ).Execute();
 
         Ioc.Resolve<ICommand>("IoC.Register", "Game.Registry.GetObject",

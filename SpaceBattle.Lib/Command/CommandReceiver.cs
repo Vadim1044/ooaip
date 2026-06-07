@@ -4,8 +4,5 @@ namespace SpaceBattle.Lib;
 
 public class CommandReceiver : ICommandReceiver
 {
-    public void Receive(ICommand command)
-    {
-        command.Execute();
-    }
+    public void Receive(ICommand command) => command.Execute();
 }

@@ -8,10 +8,7 @@ public class RegisterIoCDependencySendCommand : ICommand
     {
         Ioc.Resolve<ICommand>("IoC.Register", "Commands.Send",
             (Func<object[], object>)(args =>
-            {
-                var command = (ICommand)args[0];
-                var receiver = (ICommandReceiver)args[1];
-                return new SendCommand(command, receiver);
-            }));
+                new SendCommand((ICommand)args[0], (ICommandReceiver)args[1]))
+        );
     }
 }

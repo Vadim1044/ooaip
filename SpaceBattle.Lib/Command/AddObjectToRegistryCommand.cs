@@ -16,9 +16,7 @@ public class AddObjectToRegistryCommand : ICommand
         var registry = Ioc.Resolve<Dictionary<Guid, IDictionary<string, object>>>("Game.Registry");
 
         if (registry.ContainsKey(_id))
-        {
             throw new InvalidOperationException($"Объект с id {_id} уже существует");
-        }
 
         registry[_id] = _object;
     }

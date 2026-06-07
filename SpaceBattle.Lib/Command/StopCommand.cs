@@ -19,8 +19,7 @@ public class StopCommand : ICommand
         if (!_gameObject.TryGetValue(injectableKey, out var injectableObj))
             throw new InvalidOperationException($"Операция {_cmdType} не была начата");
 
-        var injectable = (ICommandInjectable)injectableObj;
-        injectable.Inject(new EmptyCommand());
+        ((ICommandInjectable)injectableObj).Inject(new EmptyCommand());
         _gameObject.Remove(injectableKey);
     }
 }

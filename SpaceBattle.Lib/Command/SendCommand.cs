@@ -13,8 +13,5 @@ public class SendCommand : ICommand
         _receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
     }
 
-    public void Execute()
-    {
-        _receiver.Receive(_command);
-    }
+    public void Execute() => _receiver.Receive(_command);
 }

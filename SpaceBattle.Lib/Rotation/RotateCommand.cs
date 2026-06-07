@@ -2,28 +2,21 @@
 
 public class RotateCommand : ICommand
 {
-    private readonly IRotatingObject RotatingObject;
+    private readonly IRotatingObject _rotatingObject;
 
-    public RotateCommand(IRotatingObject rotatingObject)
-    {
-        RotatingObject = rotatingObject;
-    }
+    public RotateCommand(IRotatingObject rotatingObject) => _rotatingObject = rotatingObject;
 
     public void Execute()
     {
-        if (RotatingObject.Angle == null)
-        {
+        if (_rotatingObject.Angle == null)
             throw new InvalidOperationException("Cannot get angle");
-        }
 
-        if (RotatingObject.AngularVelocity == null)
-        {
+        if (_rotatingObject.AngularVelocity == null)
             throw new InvalidOperationException("Cannot get angular velocity");
-        }
 
         try
         {
-            RotatingObject.Angle = RotatingObject.Angle + RotatingObject.AngularVelocity;
+            _rotatingObject.Angle = _rotatingObject.Angle + _rotatingObject.AngularVelocity;
         }
         catch
         {

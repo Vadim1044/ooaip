@@ -6,11 +6,7 @@ public class RegisterIoCDependencyActionsStart : ICommand
     {
         Ioc.Resolve<ICommand>("IoC.Register", "Actions.Start",
             (Func<object[], object>)(args =>
-            {
-                var gameObject = (IDictionary<string, object>)args[0];
-                var cmdType = (string)args[1];
-                return new StartCommand(gameObject, cmdType);
-            })
+                new StartCommand((IDictionary<string, object>)args[0], (string)args[1]))
         );
     }
 }

@@ -6,35 +6,28 @@ public class FireCommand : ICommand
 {
     private readonly IDictionary<string, object> _ship;
 
-    public FireCommand(IDictionary<string, object> ship)
-    {
-        _ship = ship;
-    }
+    public FireCommand(IDictionary<string, object> ship) => _ship = ship;
 
     public void Execute()
     {
-        var movingShip = Ioc.Resolve<IMovingObject>("Adapters.IMovingObject", _ship);
-        var shipPos = movingShip.Position;
-
-        var rotatingShip = Ioc.Resolve<IRotatingObject>("Adapters.IRotatingObject", _ship);
-        var angle = rotatingShip.Angle
+        var position = Ioc.Resolve<IMovingObject>("Adapters.IMovingObject", _ship).Position;
+        var heading = Ioc.Resolve<IRotatingObject>("Adapters.IRotatingObject", _ship).Angle
             ?? throw new InvalidOperationException("Ship angle is null");
 
-        double angleRad = angle;
-        int vx = (int)Math.Round(Math.Cos(angleRad));
-        int vy = (int)Math.Round(Math.Sin(angleRad));
-        var velocity = new Vector(vx, vy);
+        var radians = (double)heading;
+        var direction = new Vector(
+            (int)Math.Round(Math.Cos(radians)),
+            (int)Math.Round(Math.Sin(radians)));
 
+        var torpedoId = Guid.NewGuid();
         var torpedo = new Dictionary<string, object>
         {
-            ["Position"] = shipPos,
-            ["Velocity"] = velocity,
+            ["Position"] = position,
+            ["Velocity"] = direction,
             ["Receiver"] = new CommandReceiver()
         };
-        var torpedoId = Guid.NewGuid();
 
         Ioc.Resolve<ICommand>("Game.Registry.Add", torpedoId, torpedo).Execute();
-
         Ioc.Resolve<ICommand>("Actions.Start", torpedo, "Move").Execute();
     }
 }

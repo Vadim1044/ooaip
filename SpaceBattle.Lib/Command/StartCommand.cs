@@ -18,24 +18,20 @@ public class StartCommand : ICommand
         {
             throw new InvalidOperationException("В игровом объекте отсутствует ICommandReceiver");
         }
+
         _receiver = receiver;
     }
 
     public void Execute()
     {
-        var cmd = Ioc.Resolve<ICommand>($"Commands.{_cmdType}", _gameObject);
-
+        var operation = Ioc.Resolve<ICommand>($"Commands.{_cmdType}", _gameObject);
         var injectable = (ICommandInjectable)Ioc.Resolve<ICommand>("Commands.CommandInjectable");
-
-        var send = new SendCommand((ICommand)injectable, _receiver);
-
-        var macro = Ioc.Resolve<ICommand>($"Macro.{_cmdType}", cmd, send);
+        var sender = new SendCommand((ICommand)injectable, _receiver);
+        var macro = Ioc.Resolve<ICommand>($"Macro.{_cmdType}", operation, sender);
 
         injectable.Inject(macro);
-
         _gameObject[$"repeatable{_cmdType}"] = injectable;
 
-        var sendCommand = new SendCommand(macro, _receiver);
-        sendCommand.Execute();
+        new SendCommand(macro, _receiver).Execute();
     }
 }
